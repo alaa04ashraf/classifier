@@ -1,0 +1,164 @@
+
+public class MultiPerceptron {
+
+    // instance variables for the perceptron
+    private Perceptron[] multis;
+
+    // Creates a multi-perceptron object with m classes and n inputs.
+    // It creates an array of m perceptrons, each with n inputs.
+    public MultiPerceptron(int m, int n) {
+        multis = new Perceptron[m];
+        for (int i = 0; i < m; i++) {
+            multis[i] = new Perceptron(n);
+        }
+    }
+
+    // Returns the number of classes m.
+    public int numberOfClasses() {
+        return multis.length;
+    }
+
+    // Returns the number of inputs n (length of the feature vector).
+    public int numberOfInputs() {
+        return multis[0].numberOfInputs();
+    }
+
+    // Returns the predicted class label (between 0 and m-1) for the given input.
+    public int predictMulti(double[] x) {
+        int m = numberOfClasses();
+        int classlabel = 0;
+        double[] ws = new double[m];
+        double value = Double.NEGATIVE_INFINITY;
+
+        // updates the largest weighted sum
+        for (int i = 0; i < m; i++) {
+            ws[i] = multis[i].weightedSum(x);
+            if (ws[i] > value) {
+                value = ws[i];
+
+                // gives the class label
+                classlabel = i;
+            }
+        }
+        return classlabel;
+    }
+
+    // Trains this multi-perceptron on the labeled (between 0 and m-1) input.
+    public void trainMulti(double[] x, int classLabel) {
+        for (int i = 0; i < numberOfClasses(); i++) {
+            if (classLabel == i) {
+                multis[i].train(x, +1);
+            }
+            else {
+                multis[i].train(x, -1);
+            }
+        }
+    }
+
+    // Returns a String representation of this MultiPerceptron, with
+    // the string representations of the perceptrons separated by commas
+    // and enclosed in parentheses.
+    // Example with m = 2 and n = 3: ((2.0, 0.0, -2.0), (3.0, 4.0, 5.0))
+    public String toString() {
+        String result = "(";
+        for (int j = 0; j < numberOfClasses() - 1; j++) {
+            result = result + multis[j].toString();
+            result += ", ";
+        }
+        result += multis[numberOfClasses() - 1].toString() + ")";
+        return result;
+    }
+
+    // Tests this class by directly calling all instance methods.
+    public static void main(String[] args) {
+        MultiPerceptron test = new MultiPerceptron(2, 3);
+        double[] x = { 3.0, 4.0, 5.0 };
+        StdOut.println("inputs = " + test.numberOfInputs());
+        StdOut.println("classes = " + test.numberOfClasses());
+        StdOut.println("predict = " + test.predictMulti(x));
+        test.trainMulti(x, 1);
+        StdOut.println(test);
+    }
+}
+public class MultiPerceptron {
+ 
+    // instance variables for the perceptron
+    private Perceptron[] multis; 
+ 
+    // Creates a multi-perceptron object with m classes and n inputs.
+    // It creates an array of m perceptrons, each with n inputs.
+    public MultiPerceptron(int m, int n) {
+        multis = new Perceptron[m];
+        for (int i = 0; i < m; i++) {
+            multis[i] = new Perceptron(n);
+        }
+    }
+ 
+    // Returns the number of classes m.
+    public int numberOfClasses() {
+        return multis.length;
+    }
+ 
+    // Returns the number of inputs n (length of the feature vector).
+    public int numberOfInputs() {
+        return multis[0].numberOfInputs();
+    }
+ 
+    // Returns the predicted class label (between 0 and m-1) for the given input.
+    public int predictMulti(double[] x) {
+        int m = numberOfClasses();
+        int classlabel = 0;
+        double[] ws = new double[m];
+        double value = Double.NEGATIVE_INFINITY;
+ 
+        // updates the largest weighted sum
+        for (int i = 0; i < m; i++) {
+            ws[i] = multis[i].weightedSum(x);
+            if (ws[i] > value) {
+                value = ws[i];
+ 
+                // gives the class label
+                classlabel = i;
+            }
+        }
+        return classlabel;
+    }
+ 
+    // Trains this multi-perceptron on the labeled (between 0 and m-1) input.
+    public void trainMulti(double[] x, int classLabel) {
+        for (int i = 0; i < numberOfClasses(); i++) {
+            if (classLabel == i) {
+                multis[i].train(x, +1);
+            }
+            else {
+                multis[i].train(x, -1);
+            }
+        }
+    }
+ 
+    // Returns a String representation of this MultiPerceptron, with
+    // the string representations of the perceptrons separated by commas
+    // and enclosed in parentheses.
+    // Example with m = 2 and n = 3: ((2.0, 0.0, -2.0), (3.0, 4.0, 5.0))
+    public String toString() {
+        String result = "(";
+        for (int j = 0; j < numberOfClasses() - 1; j++) {
+            result = result + multis[j].toString();
+            result += ", ";
+        }
+        result += multis[numberOfClasses() - 1].toString() + ")";
+        return result;
+    }
+ 
+    // Tests this class by directly calling all instance methods.
+    public static void main(String[] args) {
+        MultiPerceptron test = new MultiPerceptron(2, 3);
+        double[] x = { 3.0, 4.0, 5.0 };
+        StdOut.println("inputs = " + test.numberOfInputs());
+        StdOut.println("classes = " + test.numberOfClasses());
+        StdOut.println("predict = " + test.predictMulti(x));
+        test.trainMulti(x, 1);
+        StdOut.println(test);
+    }
+}
+ 
