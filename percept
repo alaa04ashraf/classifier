@@ -1,0 +1,169 @@
+public class Perceptron {
+
+    // instance variable for the weight
+    private double[] nweight;
+
+    // Creates a perceptron with n inputs. It should create an array
+    // of n weights and initialize them all to 0.
+    public Perceptron(int n) {
+        nweight = new double[n];
+
+        for (int i = 0; i < n; i++) {
+            nweight[i] = 0;
+        }
+    }
+
+    // Returns the number of inputs n.
+    public int numberOfInputs() {
+        return nweight.length;
+    }
+
+    // Returns the weighted sum of the weight vector and x.
+    public double weightedSum(double[] x) {
+        double weightedsum = 0;
+        for (int i = 0; i < nweight.length; i++) {
+            weightedsum += nweight[i] * x[i];  // equation given
+        }
+        return weightedsum;
+    }
+
+    // Predicts the binary label (+1 or -1) of input x. It returns +1
+    // if the weighted sum is positive and -1 if it is negative (or zero).
+    public int predict(double[] x) {
+        double nweightedsum = weightedSum(x);
+        if (nweightedsum > 0) return +1;
+        else {
+            return -1;
+        }
+    }
+
+    // Trains this perceptron on the binary labeled (+1 or -1) input x.
+    // The weights vector is updated accordingly.
+    public void train(double[] x, int binaryLabel) {
+        int predicted = predict(x);
+        if (predicted != binaryLabel) {
+            for (int j = 0; j < nweight.length; j++) {
+                if (predicted == -1) {
+                    nweight[j] = nweight[j] + x[j];
+                }
+                if (predicted == +1) {
+                    nweight[j] = nweight[j] - x[j];
+                }
+
+            }
+        }
+    }
+
+    // Returns a String representation of the weight vector, with the
+    // individual weights separated by commas and enclosed in parentheses.
+    // Example: (2.0, 1.0, -1.0, 5.0, 3.0)
+    public String toString() {
+
+        String result = "(";
+        for (int i = 0; i < nweight.length; i++) {
+            result = result + nweight[i];
+            if (i < nweight.length - 1) {
+                result = result + ", ";
+            }
+        }
+        return result + ")";
+    }
+
+    // Tests this class by directly calling all instance methods
+    //
+    public static void main(String[] args) {
+        Perceptron test = new Perceptron(3);
+        double[] x = { 3.0, 4.0, 5.0 };
+        StdOut.println("inputs= " + test.numberOfInputs());
+        StdOut.println("weighted sum = " + test.weightedSum(x));
+        StdOut.println("predict = " + test.predict(x));
+        test.train(x, -1);
+        StdOut.println(test);
+
+    }
+}
+public class Perceptron {
+ 
+    // instance variable for the weight
+    private double[] nweight; 
+ 
+    // Creates a perceptron with n inputs. It should create an array
+    // of n weights and initialize them all to 0.
+    public Perceptron(int n) {
+        nweight = new double[n];
+ 
+        for (int i = 0; i < n; i++) { 
+            nweight[i] = 0; 
+        } 
+    }
+ 
+    // Returns the number of inputs n.
+    public int numberOfInputs() {
+        return nweight.length;
+    }
+ 
+    // Returns the weighted sum of the weight vector and x.
+    public double weightedSum(double[] x) {
+        double weightedsum = 0;
+        for (int i = 0; i < nweight.length; i++) {
+            weightedsum += nweight[i] * x[i];  // equation given
+        }
+        return weightedsum;
+    }
+ 
+    // Predicts the binary label (+1 or -1) of input x. It returns +1
+    // if the weighted sum is positive and -1 if it is negative (or zero).
+    public int predict(double[] x) {
+        double nweightedsum = weightedSum(x);
+        if (nweightedsum > 0) return +1;
+        else {
+            return -1;
+        }
+    }
+ 
+    // Trains this perceptron on the binary labeled (+1 or -1) input x.
+    // The weights vector is updated accordingly.
+    public void train(double[] x, int binaryLabel) {
+        int predicted = predict(x);
+        if (predicted != binaryLabel) {
+            for (int j = 0; j < nweight.length; j++) {
+                if (predicted == -1) {
+                    nweight[j] = nweight[j] + x[j];
+                }
+                if (predicted == +1) {
+                    nweight[j] = nweight[j] - x[j];
+                }
+ 
+            }
+        }
+    }
+ 
+    // Returns a String representation of the weight vector, with the
+    // individual weights separated by commas and enclosed in parentheses.
+    // Example: (2.0, 1.0, -1.0, 5.0, 3.0)
+    public String toString() {
+ 
+        String result = "(";
+        for (int i = 0; i < nweight.length; i++) {
+            result = result + nweight[i];
+            if (i < nweight.length - 1) {
+                result = result + ", ";
+            }
+        }
+        return result + ")";
+    }
+ 
+    // Tests this class by directly calling all instance methods
+    //
+    public static void main(String[] args) {
+        Perceptron test = new Perceptron(3);
+        double[] x = { 3.0, 4.0, 5.0 };
+        StdOut.println("inputs= " + test.numberOfInputs());
+        StdOut.println("weighted sum = " + test.weightedSum(x));
+        StdOut.println("predict = " + test.predict(x));
+        test.train(x, -1);
+        StdOut.println(test);
+ 
+    }
+}
+ 
