@@ -1,0 +1,246 @@
+
+import java.awt.Color;
+
+public class ImageClassifier {
+    // instance variables
+    private int width; // instance variable represents the width
+    private int height;  // instance variable represents the height
+    private int classes; // instance variable represents the number of classes
+    private String[] names; // instance variable represents the names of classes
+    private MultiPerceptron a; // instance variable imports multi-perceptron
+
+    // Uses the provided configuration file to create an
+    // ImageClassifier object.
+    public ImageClassifier(String configFile) {
+
+        // reads the files
+        In file = new In(configFile);
+        width = file.readInt();
+        height = file.readInt();
+        classes = file.readInt();
+        // define classes for the instance variable
+        names = new String[classes];
+
+        // fills up array of names
+        for (int i = 0; i < classes; i++) {
+            names[i] = file.readString();
+        }
+        // uses multi-perceptron with (classes, inputs)
+        a = new MultiPerceptron(classes, (width * height));
+
+    }
+
+    // Creates a feature vector (1D array) from the given picture.
+    public double[] extractFeatures(Picture picture) {
+        int nheight = picture.height();
+        int nwidth = picture.width();
+
+        if (height != nheight || width != nwidth) {
+            throw new IllegalArgumentException("Image's dimensions are not equal");
+        }
+
+        double[] vector = new double[nheight * nwidth];
+
+        // adds the gray color component of the pixel to a 1D vector
+        for (int row = 0; row < nheight; row++) {
+            for (int col = 0; col < nwidth; col++) {
+                Color color = picture.get(col, row);
+                vector[row * nwidth + col] = color.getRed();
+            }
+        }
+
+        return vector;
+    }
+
+    // Trains the perceptron on the given training data file.
+    public void trainClassifier(String trainFile) {
+        In trainfile = new In(trainFile);
+
+        // loops through each sub-file within the training file
+        while (!trainfile.isEmpty()) {
+            String subtrain = trainfile.readString();
+            Picture image = new Picture(subtrain);
+            int label = trainfile.readInt();
+            double[] features = extractFeatures(image);
+
+            // trains the multi-perceptron using each file's pixels and class label
+            a.trainMulti(features, label);
+        }
+
+    }
+
+    // Returns the name of the class for the given class label.
+    public String classNameOf(int classLabel) {
+        if (classLabel < 0 || classLabel > (classes - 1)) {
+            throw new IllegalArgumentException("illegal class label");
+        }
+        return names[classLabel];
+    }
+
+    // Returns the predicted class for the given picture.
+    public int classifyImage(Picture picture) {
+
+        // imports extractFeatures
+        double[] values = extractFeatures(picture);
+        int predict = a.predictMulti(values);
+        return predict;
+    }
+
+    // Returns the error rate on the given testing data file.
+    // Also prints the misclassified examples - see below.
+    public double testClassifier(String testFile) {
+        In name = new In(testFile);
+        int total = 0; // counter for the total files
+        int wrong = 0; // counter for incorrectly predicted files
+        while (!name.isEmpty()) {
+
+            String subname = name.readString();
+            Picture image = new Picture(subname);
+            int label = name.readInt();
+            int predicted = classifyImage(image);
+
+            if (predicted != label) {
+                StdOut.print(subname);
+                StdOut.print(", " + "label = " + classNameOf(label));
+                StdOut.println(", " + "predict = " + classNameOf(predicted));
+                wrong++;
+
+            }
+            total++;
+        }
+        double error = (double) wrong / total; // calculates error rate
+
+        return error; // returns the error :)
+    }
+
+    // Tests this class using a configuration file, training file and test file.
+    // See below.
+    public static void main(String[] args) {
+        ImageClassifier classifier = new ImageClassifier(args[0]);
+        classifier.trainClassifier(args[1]);
+        double testErrorRate = classifier.testClassifier(args[2]);
+        System.out.println("test error rate = " + testErrorRate);
+    }
+}
+import java.awt.Color;
+ 
+public class ImageClassifier {
+    // instance variables
+    private int width; // instance variable represents the width
+    private int height;  // instance variable represents the height
+    private int classes; // instance variable represents the number of classes
+    private String[] names; // instance variable represents the names of classes
+    private MultiPerceptron a; // instance variable imports multi-perceptron
+ 
+    // Uses the provided configuration file to create an
+    // ImageClassifier object.
+    public ImageClassifier(String configFile) {
+ 
+        // reads the files
+        In file = new In(configFile);
+        width = file.readInt();
+        height = file.readInt();
+        classes = file.readInt();
+        // define classes for the instance variable
+        names = new String[classes];
+ 
+        // fills up array of names
+        for (int i = 0; i < classes; i++) {
+            names[i] = file.readString();
+        }
+        // uses multi-perceptron with (classes, inputs)
+        a = new MultiPerceptron(classes, (width * height));
+ 
+    }
+ 
+    // Creates a feature vector (1D array) from the given picture.
+    public double[] extractFeatures(Picture picture) {
+        int nheight = picture.height();
+        int nwidth = picture.width();
+ 
+        if (height != nheight || width != nwidth) {
+            throw new IllegalArgumentException("Image's dimensions are not equal");
+        }
+ 
+        double[] vector = new double[nheight * nwidth];
+ 
+        // adds the gray color component of the pixel to a 1D vector
+        for (int row = 0; row < nheight; row++) {
+            for (int col = 0; col < nwidth; col++) {
+                Color color = picture.get(col, row);
+                vector[row * nwidth + col] = color.getRed();
+            }
+        }
+ 
+        return vector;
+    }
+ 
+    // Trains the perceptron on the given training data file.
+    public void trainClassifier(String trainFile) {
+        In trainfile = new In(trainFile);
+ 
+        // loops through each sub-file within the training file
+        while (!trainfile.isEmpty()) {
+            String subtrain = trainfile.readString();
+            Picture image = new Picture(subtrain);
+            int label = trainfile.readInt();
+            double[] features = extractFeatures(image);
+ 
+            // trains the multi-perceptron using each file's pixels and class label
+            a.trainMulti(features, label);
+        }
+ 
+    }
+ 
+    // Returns the name of the class for the given class label.
+    public String classNameOf(int classLabel) {
+        if (classLabel < 0 || classLabel > (classes - 1)) {
+            throw new IllegalArgumentException("illegal class label");
+        }
+        return names[classLabel];
+    }
+ 
+    // Returns the predicted class for the given picture.
+    public int classifyImage(Picture picture) {
+ 
+        // imports extractFeatures
+        double[] values = extractFeatures(picture);
+        int predict = a.predictMulti(values);
+        return predict;
+    }
+ 
+    // Returns the error rate on the given testing data file.
+    // Also prints the misclassified examples - see below.
+    public double testClassifier(String testFile) {
+        In name = new In(testFile);
+        int total = 0; // counter for the total files
+        int wrong = 0; // counter for incorrectly predicted files
+        while (!name.isEmpty()) {
+ 
+            String subname = name.readString();
+            Picture image = new Picture(subname);
+            int label = name.readInt();
+            int predicted = classifyImage(image);
+ 
+            if (predicted != label) {
+                StdOut.print(subname);
+                StdOut.print(", " + "label = " + classNameOf(label));
+                StdOut.println(", " + "predict = " + classNameOf(predicted));
+                wrong++;
+ 
+            }
+            total++;
+        }
+        double error = (double) wrong / total; // calculates error rate
+ 
+        return error; // returns the error :)
+    }
+ 
+    // Tests this class using a configuration file, training file and test file.
+    // See below.
+    public static void main(String[] args) {
+        ImageClassifier classifier = new ImageClassifier(args[0]);
+        classifier.trainClassifier(args[1]);
+        double testErrorRate = classifier.testClassifier(args[2]);
+        System.out.println("test error rate = " + testErrorRate);
+    }
